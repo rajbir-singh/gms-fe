@@ -1,25 +1,23 @@
 <div class="col-md-6 user-container">
   <h2 style="margin: auto"> User Details</h2>
-  <button class="btn btn-danger" style="width:100px" (click)="addUser()"> Add User</button>
+  pa<button class="btn btn-danger" style="width:100px" (click)="addUser()"> Add User</button>
   <table class="table table-striped">
     <thead>
     <tr>
-      <th class="hidden">Id</th>
-      <th>FirstName</th>
-      <th>LastName</th>
-      <th>UserName</th>
-      <th>Age</th>
-      <th>Salary</th>
+      <th *ngFor="let cell of headerRow">{{ cell }}</th>
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let user of users">
+    <tr *ngFor="let user of accounts">
       <td class="hidden"></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>{{user.name}}</td>
+      <td>{{user.email1}}</td>
+      <td>{{user.mobile1}}</td>
+      <td>{{user.qualification}}</td>
+      <td>{{user.occupation}}</td>
+      <td>{{user.income}}</td>
+      <td>{{user.height}}</td>
+      <td>{{user.weight}}</td>
       <td><button class="btn btn-success" (click)="deleteUser(user)"> Delete</button>
         <button class="btn btn-success" (click)="editUser(user)" style="margin-left: 20px;"> Edit</button></td>
     </tr>

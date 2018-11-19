@@ -1,7 +1,8 @@
 import { Component, OnInit , Inject} from '@angular/core';
 import {Router} from "@angular/router";
-import {User} from "../model/api.response";
-import {ApiService} from "../core/service/api.service";
+import {AccountDetailDto} from "../model/account.detail.dto";
+import {ApiService} from "../service/api.service";
+import { Utils } from "../service/utils"
 
 @Component({
   selector: 'app-list-user',
@@ -10,31 +11,32 @@ import {ApiService} from "../core/service/api.service";
 })
 export class ListUserComponent implements OnInit {
 
-  users: User[];
-
-  constructor(private router: Router, private apiService: ApiService) { }
+  accounts: any[];
+  headerRow: string[];
+  constructor(private router: Router, private apiService: ApiService, private utils: Utils) { }
 
   ngOnInit() {
-    if(!window.localStorage.getItem('token')) {
-      this.router.navigate(['login']);
-      return;
-    }
+    // if(!window.localStorage.getItem('token')) {
+    //   this.router.navigate(['login']);
+    //   return;
+    // }
+    this.headerRow = ['Name', 'Email', 'Mobile', 'Qualification', 'Occupation', 'Income', 'Height', 'Weight', 'Details'];
     this.apiService.getUsers()
       .subscribe( data => {
-          this.users = data.result;
+          this.accounts = this.utils.getContent(data);
       });
   }
 
-  deleteUser(user: User): void {
-    this.apiService.deleteUser(user.id)
+  deleteUser(account: AccountDetailDto): void {
+    this.apiService.deleteUser(account.accountId)
       .subscribe( data => {
-        this.users = this.users.filter(u => u !== user);
+        this.accounts = this.accounts.filter(u => u !== account);
       })
   };
 
-  editUser(user: User): void {
+  editUser(account: AccountDetailDto): void {
     window.localStorage.removeItem("editUserId");
-    window.localStorage.setItem("editUserId", user.id.toString());
+    window.localStorage.setItem("editUserId", account.accountId.toString());
     this.router.navigate(['edit-user']);
   };
 

@@ -1,9 +1,10 @@
 import { Component, OnInit , Inject} from '@angular/core';
-import {Router} from "@angular/router";
-import {User} from "../model/api.response";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {first} from "rxjs/operators";
-import {ApiService} from "../core/service/api.service";
+import { Router } from "@angular/router";
+import { AccountDetailDto } from "../model/account.detail.dto";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { first } from "rxjs/operators";
+import { ApiService } from "../service/api.service";
+import { Utils } from "../service/utils";
 
 @Component({
   selector: 'app-edit-user',
@@ -12,9 +13,9 @@ import {ApiService} from "../core/service/api.service";
 })
 export class EditUserComponent implements OnInit {
 
-  user: User;
+  user: AccountDetailDto;
   editForm: FormGroup;
-  constructor(private formBuilder: FormBuilder,private router: Router, private apiService: ApiService) { }
+  constructor(private formBuilder: FormBuilder,private router: Router, private apiService: ApiService, private utils: Utils) { }
 
   ngOnInit() {
     let userId = window.localStorage.getItem("editUserId");
@@ -33,7 +34,7 @@ export class EditUserComponent implements OnInit {
     });
     this.apiService.getUserById(+userId)
       .subscribe( data => {
-        this.editForm.setValue(data.result);
+        this.editForm.setValue(this.utils.getContent(data));
       });
   }
 
@@ -42,7 +43,7 @@ export class EditUserComponent implements OnInit {
       .pipe(first())
       .subscribe(
         data => {
-          if(data.status === 200) {
+          if(this.utils.getApiSucess(data)) {
             alert('User updated successfully.');
             this.router.navigate(['list-user']);
           }else {
