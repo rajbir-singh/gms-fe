@@ -9,10 +9,13 @@ import { EditUserComponent } from './edit-user/edit-user.component';
 import { ListUserComponent } from './list-user/list-user.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormBuilder } from '@angular/forms';
+import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider } from 'angularx-social-login';
+import { getAuthServiceConfigs } from "./social-login.config";
 
 /************* SERVICES **********/
 import { ApiService } from './service/api.service';
 import { Utils } from './service/utils';
+import { HomeUserComponent } from './home-user/home-user.component';
 
 @NgModule({
   declarations: [
@@ -20,15 +23,31 @@ import { Utils } from './service/utils';
     LoginComponent,
     AddUserComponent,
     EditUserComponent,
-    ListUserComponent
+    ListUserComponent,
+    HomeUserComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    SocialLoginModule
   ],
-  providers: [FormBuilder, ApiService, Utils],
+  providers: [
+    FormBuilder,  
+    {
+      provide: AuthServiceConfig,
+      useFactory: provideConfig
+    }, 
+    ApiService, Utils],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
 
+export function provideConfig() {
+  let config = new AuthServiceConfig([{
+    id: GoogleLoginProvider.PROVIDER_ID,
+    provider: new GoogleLoginProvider("476310390299-pvf5n4a0l7mk42vdv1bt86i1ug72dhkd.apps.googleusercontent.com")
+}]);
+
+return config;
+}

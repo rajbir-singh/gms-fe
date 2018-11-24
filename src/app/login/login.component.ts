@@ -1,44 +1,50 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import { Component } from '@angular/core';
+// import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import { AuthService, GoogleLoginProvider } from "angular5-social-login";
 import {Router} from "@angular/router";
-import {ApiService} from "../service/api.service";
-import { Utils } from "../service/utils";
+import { AppService } from "../app.service";
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
 
-  loginForm: FormGroup;
-  invalidLogin: boolean = false;
-  constructor(private formBuilder: FormBuilder, private router: Router, private apiService: ApiService, private utils: Utils) { }
+export class LoginComponent {
 
-  onSubmit() {
-    if (this.loginForm.invalid) {
-      return;
-    }
-    const loginPayload = {
-      username: this.loginForm.controls.username.value,
-      password: this.loginForm.controls.password.value
-    }
-    this.apiService.login(loginPayload).subscribe(data => {
-        if(this.utils.getApiSucess(data)) {
-        window.localStorage.setItem('token', this.utils.getContent(data).token);
-        this.router.navigate(['list-user']);
-      }else {
-        this.invalidLogin = true;
-        alert(data.message);
-      }
-    });
+  credentials = {username: '', password: ''};
+
+  constructor(private socialAuthService: AuthService, private app: AppService, private router: Router) {
   }
 
-  ngOnInit() {
-    window.localStorage.removeItem('token');
-    this.loginForm = this.formBuilder.group({
-      username: ['', Validators.compose([Validators.required])],
-      password: ['', Validators.required]
+  public signinWithGoogle () {
+    let socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
+
+    this.socialAuthService.signIn(socialPlatformProvider).then(
+      (userData) => { //on success
+         //this will return user data from google. What you need is a user token which you will send it to the server
+         this.sendToRestApiMethod(userData.idToken);
+      }
+    );
+  }
+
+  sendToRestApiMethod(token: string) : void {
+    this.http.post(“url to google login in your rest api”, { token: token })
+      .subscribe(onSuccess => {
+       //login was successful
+       //save the token that you got from your REST API in your preferred location i.e. as a Cookie or LocalStorage as you do with normal login
+     }, onFail => {
+        //login was unsuccessful
+        //show an error message
+     }
+   );
+ }
+
+  login() {
+    this.app.authenticate(this.credentials, () => {
+        this.router.navigateByUrl('/');
     });
+    return false;
   }
 
 }

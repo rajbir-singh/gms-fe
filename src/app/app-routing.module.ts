@@ -11,7 +11,10 @@ const routes: Routes = [
 {
   path: 'edit-user', 
   component: EditUserComponent
-}
+},
+  { path: '', pathMatch: 'full', redirectTo: 'home'},
+  { path: 'home', component: HomeComponent},
+  { path: 'login', component: LoginComponent}
 ];
 
 @NgModule({
