@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { AuthService, GoogleLoginProvider } from "angular5-social-login";
 import {Router} from "@angular/router";
 import { AppService } from "../app.service";
+import { ApiService } from '../service/api.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ export class LoginComponent {
 
   credentials = {username: '', password: ''};
 
-  constructor(private socialAuthService: AuthService, private app: AppService, private router: Router) {
+  constructor(private apiService: ApiService, private socialAuthService: AuthService, private app: AppService, private router: Router) {
   }
 
   public signinWithGoogle () {
@@ -28,9 +29,10 @@ export class LoginComponent {
     );
   }
 
-  sendToRestApiMethod(token: string) : void {
-    this.http.post(“url to google login in your rest api”, { token: token })
+  sendToRestApiMethod(idTokenString: string) : void {
+    this.apiService.login(idTokenString)
       .subscribe(onSuccess => {
+        console.log('Google Login Successful');
        //login was successful
        //save the token that you got from your REST API in your preferred location i.e. as a Cookie or LocalStorage as you do with normal login
      }, onFail => {
