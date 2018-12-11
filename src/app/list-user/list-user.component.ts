@@ -3,6 +3,8 @@ import {Router} from "@angular/router";
 import {AccountDetailDto} from "../model/account.detail.dto";
 import {ApiService} from "../service/api.service";
 import { Utils } from "../service/utils"
+import { ApiResponse } from 'app/model';
+import { _appIdRandomProviderFactory } from '@angular/core/src/application_tokens';
 
 @Component({
   selector: 'app-list-user',
@@ -22,8 +24,9 @@ export class ListUserComponent implements OnInit {
     // }
     this.headerRow = ['Name', 'Email', 'Mobile', 'Qualification', 'Occupation', 'Income', 'Height', 'Weight', 'Details'];
     this.apiService.getUsers()
-      .subscribe( data => {
-          this.accounts = this.utils.getContent(data);
+      .subscribe( (accounts: ApiResponse) => {
+        accounts = new ApiResponse(accounts);
+          this.accounts = accounts.getContent();
       });
   }
 

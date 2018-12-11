@@ -2,6 +2,7 @@ import { Component, OnInit, Renderer, ViewChild, ElementRef } from '@angular/cor
 import { ROUTES } from '../../sidebar/sidebar.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { LoginService } from '../../service';
 
 @Component({
     moduleId: module.id,
@@ -18,7 +19,7 @@ export class NavbarComponent implements OnInit{
 
     @ViewChild("navbar-cmp") button;
 
-    constructor(location:Location, private renderer : Renderer, private element : ElementRef) {
+    constructor(private loginService: LoginService, location:Location, private renderer : Renderer, private element : ElementRef) {
         this.location = location;
         this.nativeElement = element.nativeElement;
         this.sidebarVisible = false;
@@ -29,6 +30,11 @@ export class NavbarComponent implements OnInit{
         var navbar : HTMLElement = this.element.nativeElement;
         this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];
     }
+
+    logout() {
+        this.loginService.logout();
+    }
+    
     getTitle(){
         var titlee = window.location.pathname;
         titlee = titlee.substring(1);

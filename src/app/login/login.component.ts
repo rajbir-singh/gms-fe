@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 // import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { AuthService, GoogleLoginProvider } from "angularx-social-login";
 import { Router } from "@angular/router";
-import { ApiService } from '../service/api.service';
-import { Utils } from '../service/utils';
+import { ApiService, Utils, LoginService } from '../service';
 import { LocalStorageService, SessionStorageService, LocalStorage, SessionStorage } from 'angular-web-storage';
 
 @Component({
@@ -16,31 +15,19 @@ export class LoginComponent {
 
   // credentials = { username: '', password: '' };
 
-  constructor(private utils: Utils, private apiService: ApiService, private socialAuthService: AuthService, private router: Router) {
+  constructor(private loginService: LoginService, private utils: Utils, private apiService: ApiService, private socialAuthService: AuthService, private router: Router) {
   }
 
-  public signinWithGoogle() {
+  private signinWithGoogle() {
     let socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
     this.socialAuthService.signIn(socialPlatformProvider).then(
       (userData) => { //on success
         //this will return user data from google. What you need is a user token which you will send it to the server
-        this.sendToRestApiMethod(userData.idToken);
+        this.loginService.login(userData.idToken);
       }
     );
   }
 
-  sendToRestApiMethod(idTokenString: String): void {
-    this.apiService.login(idTokenString)
-      .subscribe(account =>  {
-        console.log('Google Login Successful');
-        let accountContent = this.utils.getContent(account);
-        this.apiService.setLoggedInAccountId(accountContent.accountId);
-        this.router.navigateByUrl('/home/' + accountContent.accountId); 
-      }, error => {
-        console.log('Error occured while loggin in using Google', + error);
-      }
-      );
-  }
 
   login() {
     // this.apiService.authenticate(this.credentials, () => {

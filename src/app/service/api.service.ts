@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {AccountDetailDto} from "../model/account.detail.dto";
+import { AccountDetailDto } from "../model/account.detail.dto";
 import { Observable } from "rxjs";
 // import {ApiResponse} from "../model/aapi.response";
-import { ApiResponse } from "../model/api.response";
+import { ApiResponse } from '../model';
 import { LocalStorageService, SessionStorageService, LocalStorage, SessionStorage } from 'angular-web-storage';
 
 import { Utils } from "./utils";
@@ -12,9 +12,9 @@ import { Utils } from "./utils";
 export class ApiService {
 
   constructor(private utils: Utils, private localStorageService: LocalStorageService, private http: HttpClient) { }
-  private beUrl: string = 'http://sprangular.herokuapp.com/api/account/';
+  public beUrl: string = 'http://sprangular.herokuapp.com/api/account/';
   // private beUrl: string = 'http://localhost:8080/api/account/';
-  private headers = new HttpHeaders({'Content-Type': 'application/json'});
+  public headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   private loggedInAccountIdKey = 'loggedInAccountId';
   // authenticated = false;
 
@@ -35,10 +35,6 @@ export class ApiService {
 
   //   }
 
-  login(idTokenString) : Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(this.beUrl + 'googleLogin/' + idTokenString, {headers: this.headers});
-  }
-
   removeLoggedInAccountId() {
     this.localStorageService.remove(this.loggedInAccountIdKey);
   }
@@ -54,12 +50,12 @@ export class ApiService {
   isUserLoggedIn(): boolean {
     return this.utils.isStringNonEmpty(this.getLoggedInAccountId());
   }
-        
-  getUsers() : Observable<ApiResponse> {
+
+  getUsers(): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(this.beUrl + 'all');
   }
 
-  getUserById(id: number): Observable<ApiResponse> {
+  getUserByAccountId(id: number): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(this.beUrl + id);
   }
 

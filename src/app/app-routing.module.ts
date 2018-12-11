@@ -18,6 +18,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { UpgradeComponent } from './upgrade/upgrade.component';
 import { PermissionDeniedComponent } from './permission-denied/permission-denied.component';
 import { CanUserEditAccountGuard } from './guards/canUserEditAccount.guard';
+import { AccountResolver } from './resolvers';
 
 const routes: Routes = [
     {
@@ -35,7 +36,8 @@ const routes: Routes = [
         path: 'home/:accountId',
         component: HomeUserComponent,
         canActivate: [IsUserLoggedInGuard],
-        data: { redirectPath: '/login' }
+        data: { redirectPath: '/login' },
+        resolve: { dataResolved: AccountResolver}
     },
     {
         path: 'permission-denied',
@@ -49,7 +51,7 @@ const routes: Routes = [
         path: 'edit-user/:accountId',
         component: EditUserComponent,
         canActivate: [CanUserEditAccountGuard],
-        data: { redirectPath: '/login' }
+        data: { redirectPath: '/permission-denied' }
     },
     {
         path: 'login',
@@ -86,7 +88,10 @@ const routes: Routes = [
     {
         path: 'upgrade',
         component: UpgradeComponent
-    }
+    },
+    //The order of the routes in the configuration matters and this is by design. The router uses a first-match wins strategy when matching routes, so more specific routes should be placed above less specific routes. In the configuration above, routes with a static path are listed first, followed by an empty path route, that matches the default route. The wildcard route comes last because it matches every URL and should be selected only if no other routes are matched first.
+    // TODO: add PNFC 
+    //{ path: '**', component: PageNotFoundComponent }
 ]
 
 @NgModule({

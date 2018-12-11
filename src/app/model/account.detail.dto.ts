@@ -1,51 +1,58 @@
+import { AddressDetailDto } from '.';
+
 export class AccountDetailDto {
-    accountId : number;
+
+    accountId: number;
 
 //     @NotNull @Size( min = 4, message = "Name must be at least 4 characters long")
-//     private String name;
+    name: string;
 
 //     @NotNull @Past @DateTimeFormat(pattern="MM/dd/yyyy")
-//     private Date dob;
+    dob: string;
 
 //     @NotNull @Size( min = 4) @NotEmpty
-//     private String fathersName;
+    fathersName: string;
 
 //     @NotNull @Size( min = 4) @NotEmpty
-//     private String mothersName;
+    mothersName: string;
 
 //     @NotNull
 // //    @Mobile
-//     private String mobile1;
+    mobile1: string;
 
 // //    @Mobile
-//     private String mobile2;
+    mobile2: string;
 
 // //    @EmailCustomValidator
 //     @NotNull
-//     private String email1;
+    email1: string;
 
 // //    @EmailCustomValidator
-//     private String email2;
+    email2: string;
 
 //     //height in inches
-//     private Double height;
+    height: number;
 
 //     //weight in Kgs
-//     private Double weight;
+    weight: number;
 
-//     private String qualification;
+    qualification: string;
 
-//     private String occupation;
+    occupation: string;
 
 //     //monthly income
-//     private Long income;
+    income: number;
 
-// //    @NotNull
-//     private List<AddressDetailDto> addresses;
+//     @NotNull
+    addressDetailDtos: AddressDetailDto[];
 
-//     private Boolean ownHouse;
+    ownHouse: boolean;
 
-//     private Boolean onlyChild;
+    onlyChild: boolean;
 
-//     private String details;
+    details: string;
+
+    constructor(accountId: string, name: string, dob: string, fathersName: string, mothersName: string, mobile1: string, mobile2: string, email1: string, email2: string, height: number, weight: number, qualification: string, occupation: string, income: number, addressDetailDtos: AddressDetailDto[], ownHouse: boolean, onlyChild: boolean, details: string) {
+
+    }
 }

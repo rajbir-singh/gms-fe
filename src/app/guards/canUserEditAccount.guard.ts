@@ -21,7 +21,7 @@ export class CanUserEditAccountGuard implements CanActivate {
             return true;
         }
         else {
-            let redirect = !!customRedirect ? customRedirect : '/login';
+            let redirect = !!customRedirect ? customRedirect : '/permission-denied';
             this.router.navigate([redirect]);
         }
         return false;

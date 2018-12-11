@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { first } from "rxjs/operators";
 import { ApiService } from "../service/api.service";
 import { Utils } from "../service/utils";
+import { ApiResponse } from 'app/model';
 
 @Component({
   selector: 'app-edit-user',
@@ -24,17 +25,20 @@ export class EditUserComponent implements OnInit {
       this.router.navigate(['list-user']);
       return;
     }
+
+    dob: string, fathersName: string, mothersName: string, mobile1: string, mobile2: string, email1: string, email2: string, height: number, weight: number, qualification: string, occupation: string, income: number, addressDetailDtos: AddressDetailDto[], ownHouse: boolean, onlyChild: boolean, details: string
+
     this.editForm = this.formBuilder.group({
-      id: [''],
-      username: ['', Validators.required],
+      name: ['', Validators.required, Validators.min(5), Validators.max(50)],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       age: ['', Validators.required],
       salary: ['', Validators.required]
     });
-    this.apiService.getUserById(+userId)
-      .subscribe( data => {
-        this.editForm.setValue(this.utils.getContent(data));
+    this.apiService.getUserByAccountId(+userId)
+      .subscribe( (account: ApiResponse) => {
+        // account = new ApiResponse(account);
+        this.editForm.setValue(account);
       });
   }
 
@@ -42,12 +46,13 @@ export class EditUserComponent implements OnInit {
     this.apiService.updateUser(this.editForm.value)
       .pipe(first())
       .subscribe(
-        data => {
-          if(this.utils.getApiSucess(data)) {
+        (account: ApiResponse) => {
+          account = new ApiResponse(account);
+          if(account.getApiSucess()) {
             alert('User updated successfully.');
             this.router.navigate(['list-user']);
           }else {
-            alert(data.message);
+            alert(account.getMessage());
           }
         },
         error => {
